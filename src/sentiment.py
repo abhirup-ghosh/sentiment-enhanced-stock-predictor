@@ -33,7 +33,7 @@ def fetch_newsapi_headlines(ticker: str, start: str, end: str) -> List[str]:
     if NEWSAPI_KEY is None:
         return []
 
-    company = 'Trump'#_COMPANY_BY_TICKER.get(ticker, ticker)
+    company = _COMPANY_BY_TICKER.get(ticker, ticker)
     url = "https://newsapi.org/v2/top-headlines"
     params = {
         "q": company,
