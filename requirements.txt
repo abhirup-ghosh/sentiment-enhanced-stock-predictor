@@ -7,3 +7,7 @@ torch
 scikit-learn
 streamlit
 newsapi-python
+requests
+python-dotenv
+joblib
+beautifulsoup4

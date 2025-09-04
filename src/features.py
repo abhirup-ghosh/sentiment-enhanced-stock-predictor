@@ -17,7 +17,7 @@ def merge_sentiment(price_df: pd.DataFrame, sent_df: pd.DataFrame) -> pd.DataFra
     p = price_df.copy()
     s = sent_df.copy()
     s["date"] = pd.to_datetime(s["date"])
-    p["date"] = pd.to_datetime(p["Date"]).dt.date
+    p["date"] = pd.to_datetime(p["Date"])
     feat = p.merge(s, how="left", left_on=["date","Ticker"], right_on=["date","ticker"])
     feat["sentiment"] = feat["sentiment"].fillna(0.0)
     feat["sentiment_3d"] = feat.groupby("Ticker")["sentiment"].transform(lambda x: x.rolling(3, min_periods=1).mean())
