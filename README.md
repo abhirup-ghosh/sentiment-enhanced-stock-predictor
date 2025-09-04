@@ -3,6 +3,8 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+![Project Banner](banner.png)
+
 ## Table of Contents
 - [Executive Summary](#executive-summary)
 - [Project Description](#project-description)
