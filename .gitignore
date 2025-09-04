@@ -1,0 +1,9 @@
+.env
+.DS_Store
+notebooks/.DS_Store
+notebooks/data/
+notebooks/models/
+notebooks/reports/
+src/.DS_Store
+src/__pycache__/
+venv/
