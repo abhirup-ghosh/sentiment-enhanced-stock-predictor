@@ -16,12 +16,26 @@ from src.features import add_technical_features, merge_sentiment
 from src.sentiment import get_daily_sentiment
 
 def create_targets(df: pd.DataFrame, hold_days: int = 3) -> pd.DataFrame:
+    """
+    Adds future return and binary target columns to the dataframe.
+    - future_return_{hold_days}d: percent change in Close price over hold_days, shifted to align with prediction date
+    - target: binary indicator (1 if future return > 0, else 0)
+    """
     df = df.sort_values(["Ticker","Date"]).copy()
     df[f"future_return_{hold_days}d"] = df.groupby("Ticker")["Close"].pct_change(hold_days).shift(-hold_days)
     df["target"] = (df[f"future_return_{hold_days}d"] > 0).astype(int)
     return df
 
 def main(tickers, start, end, out_path):
+    """
+    Main workflow to build the dataset:
+    - Fetch price data for all tickers
+    - Fetch and combine daily sentiment for each ticker
+    - Add technical features
+    - Merge sentiment features
+    - Add target columns
+    - Save processed features to disk
+    """
     prices = fetch_prices(tickers, start=start, end=end)
     all_sent = []
     for t in tickers:

@@ -26,6 +26,9 @@ _COMPANY_BY_TICKER = {
     "NVDA": "NVIDIA",
     "TSLA": "Tesla",
     "AMZN": "Amazon",
+    "GOOGL": "Alphabet",
+    "META": "Facebook",
+    "INTC": "Intel",
 }
 
 def fetch_newsapi_headlines(ticker: str, start: str, end: str) -> List[str]:
@@ -59,38 +62,6 @@ def fetch_yahoo_headlines(ticker: str) -> List[str]:
         print(f"[WARN] Yahoo Finance news fetch failed for {ticker}: {e}")
         return []
 
-def get_daily_sentiment(ticker: str, start: str, end: str) -> pd.DataFrame:
-    """Get daily average sentiment for a ticker."""
-    headlines = fetch_newsapi_headlines(ticker, start, end)
-    if not headlines:  # fallback if NewsAPI fails
-        headlines = fetch_yahoo_headlines(ticker)
-
-    scored = score_sentiment_vader(headlines)
-    if not scored:
-        return pd.DataFrame(columns=["Date", "sentiment", "Ticker"])
-
-    df = pd.DataFrame(scored, columns=["Date", "sentiment"])
-    df["Date"] = pd.to_datetime(df["Date"]).dt.date
-    df = df.groupby("Date")["sentiment"].mean().reset_index()
-    df["Ticker"] = ticker
-    return df
-
-def get_daily_sentiment(ticker: str, start: str, end: str) -> pd.DataFrame:
-    """Get daily average sentiment for a ticker."""
-    headlines = fetch_newsapi_headlines(ticker, start, end)
-    if not headlines:  # fallback if NewsAPI fails
-        headlines = fetch_yahoo_headlines(ticker)
-
-    scored = score_sentiment_vader(headlines)
-    if not scored:
-        return pd.DataFrame(columns=["Date", "sentiment", "Ticker"])
-
-    df = pd.DataFrame(scored, columns=["Date", "sentiment"])
-    df["Date"] = pd.to_datetime(df["Date"]).dt.date
-    df = df.groupby("Date")["sentiment"].mean().reset_index()
-    df["Ticker"] = ticker
-    return df
-
 def score_daily_sentiment_vader(headlines_df: pd.DataFrame) -> pd.DataFrame:
     if headlines_df is None or headlines_df.empty:
         return pd.DataFrame(columns=["date","sentiment"])
@@ -102,8 +73,14 @@ def score_daily_sentiment_vader(headlines_df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 def get_daily_sentiment(ticker: str, start: str, end: str) -> pd.DataFrame:
-    headlines = fetch_newsapi_headlines(ticker, start, end)
-    headlines_df = pd.DataFrame({"title": headlines, "date": [dt.date.today()] * len(headlines)})
+    """Get daily average sentiment for a ticker using both NewsAPI and Yahoo headlines."""
+    newsapi_headlines = fetch_newsapi_headlines(ticker, start, end)
+    yahoo_headlines = fetch_yahoo_headlines(ticker)
+    # Combine and deduplicate headlines
+    all_headlines = list({h for h in newsapi_headlines + yahoo_headlines if h})
+    if not all_headlines:
+        return pd.DataFrame(columns=["date", "sentiment", "ticker"])
+    headlines_df = pd.DataFrame({"title": all_headlines, "date": [dt.date.today()] * len(all_headlines)})
     daily = score_daily_sentiment_vader(headlines_df)
     daily["ticker"] = ticker
     return daily

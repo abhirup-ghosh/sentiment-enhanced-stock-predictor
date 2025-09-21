@@ -30,7 +30,7 @@ Financial markets are influenced by a complex interplay of quantitative signals 
 
 ## Data Sources
 - **Stock Prices:** Fetched via [Yahoo Finance](https://finance.yahoo.com/) ([yfinance Python package](https://github.com/ranaroussi/yfinance))
-- **News Headlines:** Collected using [NewsAPI](https://newsapi.org/)
+- **News Headlines:** Collected using both [NewsAPI](https://newsapi.org/) and [Yahoo Finance](https://finance.yahoo.com/) (via yfinance)
 - **Sentiment Scores:** Computed using [NLTK VADER](https://github.com/cjhutto/vaderSentiment)
 
 All data is combined into a unified dataset for feature engineering and modeling. No raw data files are committed to this repository; see instructions below for data access.
@@ -79,7 +79,7 @@ sentiment-stock-predictor/
 ### Run Workflow
 - Build dataset:
   ```bash
-  python -m src.build_dataset --tickers AAPL,MSFT,NVDA --start 2023-01-01 --end 2025-09-01 --out data/processed/features.parquet
+  python -m src.build_dataset --tickers AAPL,MSFT,NVDA,TSL,AMZ,GOOGL,META,INTL --start 2023-01-01 --end 2025-09-01 --out data/processed/features.parquet
   ```
 - Train models:
   ```bash
