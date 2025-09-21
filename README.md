@@ -79,7 +79,7 @@ sentiment-stock-predictor/
 ### Run Workflow
 - Build dataset:
   ```bash
-  python -m src.build_dataset --tickers AAPL,MSFT,NVDA,TSL,AMZ,GOOGL,META,INTL --start 2023-01-01 --end 2025-09-01 --out data/processed/features.parquet
+  python -m src.build_dataset --tickers AAPL,MSFT,NVDA,TSL,AMZN,GOOGL,META,INTL --start 2023-01-01 --end 2025-09-01 --out data/processed/features.parquet
   ```
 - Train models:
   ```bash
